@@ -22,13 +22,13 @@ resource "ncloud_subnet" "subnet_public" {
 /*
 ** server
 */
-resource "ncloud_login_key" "was_key" {
-  key_name = "${var.terraform_name}-was-key"
+resource "ncloud_login_key" "sportspie_key" {
+  key_name = "${var.terraform_name}-key"
 }
 
 resource "local_file" "ncp_pem" {
-  filename = "${ncloud_login_key.was_key.key_name}.pem"
-  content = ncloud_login_key.was_key.private_key
+  filename = "${ncloud_login_key.sportspie_key.key_name}.pem"
+  content = ncloud_login_key.sportspie_key.private_key
 }
 
 resource "ncloud_access_control_group" "web_acg_01" {
@@ -156,7 +156,7 @@ resource "ncloud_server" "web_server" {
     name = "${var.terraform_name}-web"
     server_image_product_code = "SW.VSVR.OS.LNX64.UBNTU.SVR2004.B050"
     server_product_code = "SVR.VSVR.STAND.C002.M008.NET.HDD.B050.G002"
-    login_key_name = ncloud_login_key.was_key.key_name
+    login_key_name = ncloud_login_key.sportspie_key.key_name
     network_interface   {
       network_interface_no = ncloud_network_interface.web_nic.id
       order = 0
@@ -168,7 +168,7 @@ resource "ncloud_server" "was_server" {
     name = "${var.terraform_name}-was"
     server_image_product_code = "SW.VSVR.OS.LNX64.UBNTU.SVR2004.B050"
     server_product_code = "SVR.VSVR.STAND.C002.M008.NET.HDD.B050.G002"
-    login_key_name = ncloud_login_key.was_key.key_name
+    login_key_name = ncloud_login_key.sportspie_key.key_name
     network_interface   {
       network_interface_no = ncloud_network_interface.was_nic.id
       order = 0
@@ -180,21 +180,42 @@ resource "ncloud_server" "db_server" {
     name = "${var.terraform_name}-db"
     server_image_product_code = "SW.VSVR.OS.LNX64.UBNTU.SVR2004.B050"
     server_product_code = "SVR.VSVR.STAND.C002.M008.NET.HDD.B050.G002"
-    login_key_name = ncloud_login_key.was_key.key_name
+    login_key_name = ncloud_login_key.sportspie_key.key_name
     network_interface   {
       network_interface_no = ncloud_network_interface.db_nic.id
       order = 0
   }
 }
 
-data "ncloud_root_password" "default" {
+data "ncloud_root_password" "web_default" {
+  server_instance_no = ncloud_server.web_server.instance_no
+  private_key = ncloud_login_key.sportspie_key.private_key
+}
+
+data "ncloud_root_password" "was_default" {
   server_instance_no = ncloud_server.was_server.instance_no
-  private_key = ncloud_login_key.was_key.private_key
+  private_key = ncloud_login_key.sportspie_key.private_key
+}
+
+data "ncloud_root_password" "db_default" {
+  server_instance_no = ncloud_server.db_server.instance_no
+  private_key = ncloud_login_key.sportspie_key.private_key
+}
+
+
+resource "local_file" "web_root_pw" {
+  filename = "${ncloud_server.web_server.name}-root_password.txt"
+  content = "${ncloud_server.web_server.name} => ${data.ncloud_root_password.web_default.root_password}"
 }
 
 resource "local_file" "was_root_pw" {
   filename = "${ncloud_server.was_server.name}-root_password.txt"
-  content = "${ncloud_server.was_server.name} => ${data.ncloud_root_password.default.root_password}"
+  content = "${ncloud_server.was_server.name} => ${data.ncloud_root_password.was_default.root_password}"
+}
+
+resource "local_file" "db_root_pw" {
+  filename = "${ncloud_server.db_server.name}-root_password.txt"
+  content = "${ncloud_server.db_server.name} => ${data.ncloud_root_password.db_default.root_password}"
 }
 
 resource "ncloud_public_ip" "web_ip" {

@@ -37,9 +37,9 @@ variable "vpc_cidr" {
 
 variable "vpc_no" {
   description = "vpc number"
-  default = "51124"
+  default = "51125"
 }
 variable "sunbet_public_id" {
   description = "public subnet id"
-  default = "114918"
+  default = "114919"
 }
