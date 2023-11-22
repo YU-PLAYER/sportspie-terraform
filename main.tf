@@ -114,6 +114,12 @@ resource "ncloud_access_control_group_rule" "db_acg_rule_01" {
     port_range  = "22"
     description = "accept 22 port(all ip)"
   }
+  inbound {
+    protocol    = "TCP"
+    ip_block    = "0.0.0.0/0"
+    port_range  = "3306"
+    description = "accept 3306 port(all ip)"
+  }
   outbound {
     protocol    = "TCP"
     ip_block    = "0.0.0.0/0" 
