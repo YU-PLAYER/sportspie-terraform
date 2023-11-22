@@ -1,9 +1,8 @@
-resource "ncloud_server" "server" {
-    name = "sportspie-server"
-    server_image_product_code = "SPSW0LINUX000130"
-    server_product_code = "SPSVRSTAND000003"
+resource "ncloud_vpc" "vpc" {
+  name = "sportspie-vpc"
+  ipv4_cidr_block = "10.0.0.0/16"
 }
 
-resource "ncloud_public_ip" "public_ip" {
-  server_instance_no = "20131099"
+resource "ncloud_network_acl" "nacl" {
+  vpc_no = ncloud_vpc.vpc.id
 }

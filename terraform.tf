@@ -14,5 +14,5 @@ provider "ncloud" {
   secret_key  = var.secret_key
   region      = var.region
   site        = var.site
-  support_vpc = var.support_vpc
+  support_vpc = true
 }
