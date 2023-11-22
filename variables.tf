@@ -20,5 +20,16 @@ variable "site" {
 
 variable "support_vpc" {
     description = "NCP support vpc"
-    default = "false"
+    default = "true"
+}
+
+variable "zones" {
+  default =  "KR-2"
+}
+
+variable "terraform_name" {
+  default = "sportspie"
+}
+variable "vpc_cidr" {
+  default = "10.0.0.0/16"
 }
