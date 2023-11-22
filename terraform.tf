@@ -3,7 +3,6 @@ terraform {
     ncloud = {
       source = "NaverCloudPlatform/ncloud"
       version = "2.3.18"
-
     }
   }
 }

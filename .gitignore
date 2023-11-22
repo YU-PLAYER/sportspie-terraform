@@ -4,3 +4,6 @@
 /terraform.tfstate
 /terraform.tfstate.*
 /terraform.tfvars
+
+*.pem
+*-root_password.txt
