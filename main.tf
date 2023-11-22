@@ -197,7 +197,17 @@ resource "local_file" "was_root_pw" {
   content = "${ncloud_server.was_server.name} => ${data.ncloud_root_password.default.root_password}"
 }
 
-resource "ncloud_public_ip" "public_ip" {
+resource "ncloud_public_ip" "web_ip" {
+  server_instance_no = ncloud_server.web_server.id
+  description        = "for ${ncloud_server.web_server.name} public ip"
+}
+
+resource "ncloud_public_ip" "was_ip" {
   server_instance_no = ncloud_server.was_server.id
   description        = "for ${ncloud_server.was_server.name} public ip"
+}
+
+resource "ncloud_public_ip" "db_ip" {
+  server_instance_no = ncloud_server.db_server.id
+  description        = "for ${ncloud_server.db_server.name} public ip"
 }
